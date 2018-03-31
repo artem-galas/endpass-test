@@ -5,22 +5,48 @@
         <mat-card-title>Endpass Dice</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <form>
-          <div>
+        <form [formGroup]="diceForm">
+          <div class="form-group">
             <mat-form-field>
-              <label>Beat Amount</label>
-              <input matInput>
+              <label>Bet Amount</label>
+              <input matInput formControlName="betAmount">
+              <mat-error *ngIf="betAmountControl.hasError('required')">
+                Bet Amount is required
+              </mat-error>
+              <mat-error *ngIf="betAmountControl.hasError('pattern')">
+                Field is not a number
+              </mat-error>
+              <mat-error *ngIf="betAmountControl.hasError('min') || betAmountControl.hasError('max')">
+                  Bet Amount should be greater than 1 and less than 100
+                </mat-error>
             </mat-form-field>
           </div>
-          <div>
+          <div class="form-group">
             <mat-form-field>
               <label>Number</label>
-              <input matInput placeholder="">
+              <input matInput formControlName="number">
+              <mat-error *ngIf="numberControl.hasError('pattern')">
+                Field is not Valid
+              </mat-error>
             </mat-form-field>
           </div>
         </form>
-        <button mat-raised-button color="primary">Bet HI</button>
-        <button mat-raised-button color="primary">Bet LO</button>
+        <div class="button-container">
+          <button mat-raised-button color="primary" [disabled]="diceForm.invalid">Bet HI</button>
+          <div class="winning-info-box">
+            <p>number >= {{numberControl.value}}</p>
+            <p>chance: <strong>{{bet?.chanceHi}}%</strong></p>
+            <p>payout <strong>{{bet?.payoutHi}}x</strong></p>
+          </div>
+        </div>
+        <div class="button-container">
+          <button mat-raised-button color="primary" [disabled]="diceForm.invalid">Bet LO</button>
+          <div class="winning-info-box">
+            <p>number >= {{numberControl.value}}</p>
+            <p>chance: <strong>{{bet?.chanceLo}}%</strong></p>
+            <p>payout <strong>{{bet?.payoutLo}}x</strong></p>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
