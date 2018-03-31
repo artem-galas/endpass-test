@@ -1,0 +1,24 @@
+.dice {
+  width: 500px;
+}
+
+.dice mat-card-title {
+  font-size: 22px;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+
+  .content-item {
+    flex: 0 1 auto;
+    align-self: auto;
+    &.left-column {
+      margin-right: 20px;
+    }
+  }
+}
