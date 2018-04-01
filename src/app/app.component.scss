@@ -20,9 +20,19 @@
     &.left-column {
       margin-right: 20px;
     }
+    &.right-column {
+      mat-card {
+        max-width: 250px;
+      }
+    }
     .button-container {
       display: inline-block;
       margin-right: 25px;
     }
   }
+}
+
+mat-card.hash {
+  margin: 20px 0;
+  word-wrap: break-word;
 }

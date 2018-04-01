@@ -2,8 +2,8 @@ export class Bet {
   public bet: number;
   public chanceHi: number;
   public chanceLo: number;
-  public payoutHi: string;
-  public payoutLo: string;
+  public payoutHi: number;
+  public payoutLo: number;
 
   constructor(bet: number) {
     this.bet = bet;
@@ -21,7 +21,7 @@ export class Bet {
     return 100 - this.chanceHi;
   }
 
-  private calculatePayout(chance): string {
-    return (100 / chance).toFixed(2);
+  private calculatePayout(chance): number {
+    return parseFloat((100 / chance).toFixed(2));
   }
 }

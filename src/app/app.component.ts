@@ -6,6 +6,7 @@ import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from
 
 import {debounceTime} from 'rxjs/operators';
 import { Bet } from './models/bet';
+import { ValueClass } from './lib/value';
 
 @Component({
   selector: 'app-root',
@@ -16,15 +17,23 @@ export class AppComponent implements OnInit {
   public user: User;
   public diceForm: FormGroup;
   public bet: Bet;
+  public nextValueHash: string;
+  public nextValue: number;
+  public result: {
+    win: boolean
+    numbrer: number,
+  };
+  public diceFormSubmit = false;
+  public valueClass: ValueClass;
 
   constructor(private fb: FormBuilder) {
-    const currentUser = UserLocalStorage.getUser();
-    if (currentUser) {
-      this.user = currentUser;
+    if (localStorage.getItem(environment.localStorageUserKey)) {
+      this.user = UserLocalStorage.getUser();
     } else {
       this.user = new User();
       UserLocalStorage.setUser(this.user);
     }
+    this.setNewValue();
   }
 
   ngOnInit() {
@@ -35,7 +44,6 @@ export class AppComponent implements OnInit {
       debounceTime(500)
     ).subscribe(value => {
       this.bet = new Bet(value);
-      console.log(this.bet);
     });
   }
 
@@ -61,8 +69,21 @@ export class AppComponent implements OnInit {
     UserLocalStorage.setUser(this.user);
   }
 
-  public submitDiceForm() {
-    console.log(this.diceForm);
+  public setBet({hi}: {hi: boolean}) {
+    this.diceFormSubmit = true;
+    if (hi) {
+      if (this.nextValue >= this.diceForm.value.number) {
+        this.userWin(this.bet.payoutHi);
+      } else {
+        this.userFail(this.bet.payoutHi);
+      }
+    } else {
+      if (this.nextValue <= this.diceForm.value.number) {
+        this.userWin(this.bet.payoutLo);
+      } else {
+        this.userFail(this.bet.payoutLo);
+      }
+    }
   }
 
   get betAmountControl(): AbstractControl {
@@ -71,5 +92,35 @@ export class AppComponent implements OnInit {
 
   get numberControl(): AbstractControl {
     return this.diceForm.get('number');
+  }
+
+  private setNewValue() {
+    this.valueClass = new ValueClass();
+    this.nextValue = this.valueClass.value;
+    this.nextValueHash = this.valueClass.valueHash;
+  }
+
+  private userWin(payout: number) {
+    this.user.increaceBalance(payout);
+    UserLocalStorage.setUser(this.user);
+    this.result = {
+      numbrer: this.nextValue,
+      win: true,
+    };
+  }
+
+  private userFail(payout: number) {
+    this.user.decriceBalance(payout);
+    UserLocalStorage.setUser(this.user);
+    this.result = {
+      numbrer: this.nextValue,
+      win: false,
+    };
+  }
+
+  public tryAgain() {
+    this.diceForm.reset();
+    this.diceFormSubmit = false;
+    this.setNewValue();
   }
 }

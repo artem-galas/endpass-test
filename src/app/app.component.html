@@ -5,7 +5,7 @@
         <mat-card-title>Endpass Dice</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <form [formGroup]="diceForm">
+        <form [formGroup]="diceForm" id="diceForm">
           <div class="form-group">
             <mat-form-field>
               <label>Bet Amount</label>
@@ -32,7 +32,8 @@
           </div>
         </form>
         <div class="button-container">
-          <button mat-raised-button color="primary" [disabled]="diceForm.invalid">Bet HI</button>
+          <button (click)="setBet({hi: true})" mat-raised-button color="primary"
+            [disabled]="diceForm.invalid || diceFormSubmit">Bet HI</button>
           <div class="winning-info-box">
             <p>number >= {{numberControl.value}}</p>
             <p>chance: <strong>{{bet?.chanceHi}}%</strong></p>
@@ -40,9 +41,10 @@
           </div>
         </div>
         <div class="button-container">
-          <button mat-raised-button color="primary" [disabled]="diceForm.invalid">Bet LO</button>
+          <button (click)="setBet({hi: false})" mat-raised-button color="primary"
+            [disabled]="diceForm.invalid || diceFormSubmit">Bet LO</button>
           <div class="winning-info-box">
-            <p>number >= {{numberControl.value}}</p>
+            <p>number <= {{numberControl.value}}</p>
             <p>chance: <strong>{{bet?.chanceLo}}%</strong></p>
             <p>payout <strong>{{bet?.payoutLo}}x</strong></p>
           </div>
@@ -58,6 +60,23 @@
       </mat-card-content>
       <mat-card-actions>
         <button class="btn-blok" mat-raised-button (click)="getFreeCredits()" [disabled]="user.balance > 0">Free Credits</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="hash">
+      <mat-card-content>
+        <p>Provably Fair Hash:</p>
+        <strong>{{nextValueHash}}</strong>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="result" *ngIf="diceFormSubmit" >
+      <mat-card-content>
+        <p>You're {{result.win ? 'WIN' : 'FAIL'}}</p>
+        <strong>{{result.numbrer}}</strong>
+      </mat-card-content>
+      <mat-card-actions>
+        <button class="btn-blok" mat-raised-button color="accent" (click)="tryAgain()">Try Again</button>
       </mat-card-actions>
     </mat-card>
   </div>
