@@ -43,7 +43,9 @@ export class AppComponent implements OnInit {
     .pipe(
       debounceTime(500)
     ).subscribe(value => {
-      this.bet = new Bet(value);
+      if (value !== null) {
+        this.bet = new Bet(value);
+      }
     });
   }
 
@@ -101,7 +103,8 @@ export class AppComponent implements OnInit {
   }
 
   private userWin(payout: number) {
-    this.user.increaceBalance(payout);
+    const value = payout * this.diceForm.value.betAmount;
+    this.user.increaceBalance(value);
     UserLocalStorage.setUser(this.user);
     this.result = {
       numbrer: this.nextValue,
@@ -110,7 +113,7 @@ export class AppComponent implements OnInit {
   }
 
   private userFail(payout: number) {
-    this.user.decriceBalance(payout);
+    this.user.decriceBalance(this.diceForm.value.betAmount);
     UserLocalStorage.setUser(this.user);
     this.result = {
       numbrer: this.nextValue,

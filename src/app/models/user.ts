@@ -14,11 +14,11 @@ export class User {
     this.balance = 100;
   }
 
-  public increaceBalance(chance: number) {
-    this.balance *= chance;
+  public increaceBalance(value: number) {
+    this.balance = Math.round(this.balance + value);
   }
 
-  public decriceBalance(chance: number) {
-    this.balance /= chance;
+  public decriceBalance(value: number) {
+    this.balance -= value;
   }
 }
