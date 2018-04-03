@@ -56,7 +56,7 @@
   <div class="content-item right-column">
     <mat-card class="user">
       <mat-card-content>
-        <span>Balance: <strong>{{user.balance}}</strong> credits</span>
+        <span class="balance">Balance: <strong>{{user.balance}}</strong> credits</span>
       </mat-card-content>
       <mat-card-actions>
         <button class="btn-blok" mat-raised-button (click)="getFreeCredits()" [disabled]="user.balance > 0">Free Credits</button>
